@@ -3,6 +3,8 @@ package net.hitch_hiking.otostopproject;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
@@ -20,6 +22,9 @@ import com.firebase.client.AuthData;
 import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
 
+import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -272,7 +277,8 @@ public class MainActivity extends ActionBarActivity {
                 Log.e(TAG, "Invalid provider: " + authData.getProvider());
             }
             if (name != null) {
-                mLoggedInStatusTextView.setText("Logged in as " + name + " (" + authData.getProvider() + ")");
+                mLoggedInStatusTextView.setText("Logged in as " + name + " (" + authData.getProvider() + ")" +
+                "Facebook ID"+ authData.getProviderData().get("id") );
             }
         } else {
             /* No authenticated user show all the login buttons */
@@ -288,6 +294,24 @@ public class MainActivity extends ActionBarActivity {
         this.mAuthData = authData;
         /* invalidate options menu to hide/show the logout button */
         supportInvalidateOptionsMenu();
+    }
+
+    public static Bitmap getFacebookProfilePicture(String userID) {
+        URL imageURL = null;
+        try {
+            imageURL = new URL("https://graph.facebook.com/" + userID + "/picture?type=large");
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        }
+
+        Bitmap bitmap = null;
+        try {
+            bitmap = BitmapFactory.decodeStream(imageURL.openConnection().getInputStream());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return bitmap;
     }
 
     /**
