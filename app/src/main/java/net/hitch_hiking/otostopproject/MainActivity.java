@@ -1,16 +1,19 @@
 package net.hitch_hiking.otostopproject;
 
 import android.app.Activity;
-import android.support.v7.app.ActionBarActivity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 
+import Intro.Intro;
+
 
 public class MainActivity extends Activity {
 
+    /* Hello button */
     private Button mHelloButton;
 
     @Override
@@ -22,7 +25,9 @@ public class MainActivity extends Activity {
         mHelloButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                Intent intent;
+                intent = new Intent(MainActivity.this, Intro.class);
+                startActivity(intent);
             }
         });
 
