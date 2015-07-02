@@ -4,6 +4,7 @@
 
     <!-- Permissions -->
     <uses-permission android:name="android.permission.VIBRATE" />
+    <uses-permission android:name="android.permission.INTERNET" />
 
     <application
         android:allowBackup="true"
@@ -16,7 +17,7 @@
 
         </activity>
         <activity
-            android:name="Intro.Intro"
+            android:name=".Intro"
             android:label="@string/hello_world" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

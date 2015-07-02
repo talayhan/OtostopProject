@@ -1,35 +1,24 @@
 package net.hitch_hiking.otostopproject;
 
 import android.app.Activity;
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.Button;
 
-import Intro.Intro;
+import com.facebook.FacebookSdk;
+import com.firebase.client.Firebase;
+
 
 
 public class MainActivity extends Activity {
 
-    /* Hello button */
-    private Button mHelloButton;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        //Firebase.setAndroidContext(this);
+        FacebookSdk.sdkInitialize(this);
 
-        mHelloButton = (Button) findViewById(R.id.helloButton);
-        mHelloButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent;
-                intent = new Intent(MainActivity.this, Intro.class);
-                startActivity(intent);
-            }
-        });
+        setContentView(R.layout.activity_main);
 
     }
 

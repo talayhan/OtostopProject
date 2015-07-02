@@ -1,4 +1,4 @@
-package Intro;
+package net.hitch_hiking.otostopproject;
 
 import android.content.Intent;
 import android.graphics.Color;
@@ -7,9 +7,6 @@ import android.view.View;
 import android.widget.Toast;
 
 import com.github.paolorotolo.appintro.AppIntro;
-
-import net.hitch_hiking.otostopproject.MainActivity;
-import net.hitch_hiking.otostopproject.R;
 
 /**
  * Created by root on 7/1/15.
