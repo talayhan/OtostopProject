@@ -6,5 +6,7 @@
     <string name="skip_string">Skip</string>
     <string name="login_with_facebook">Login with Facebook</string>
     <string name="action_logout">Logout</string>
+    <string name="login_with_password">Login with password</string>
+    <string name="login_anonymously">Login anonymously</string>
 
 </resources>

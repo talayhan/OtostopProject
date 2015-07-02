@@ -9,6 +9,7 @@
     tools:context=".MainActivity"
     android:id="@+id/linearLayout">
 
+
     <TextView
         android:id="@+id/login_status"
         android:visibility="gone"
@@ -24,6 +25,21 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
         android:text="@string/login_with_facebook"
+        android:textSize="@dimen/fb_text_size"
+        android:paddingTop="@dimen/padding_top"
+        android:paddingBottom="@dimen/padding_bottom"
         />
+
+    <Button
+        android:id="@+id/login_with_password"
+        android:text="@string/login_with_password"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <Button
+        android:id="@+id/login_anonymously"
+        android:text="@string/login_anonymously"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
 
 </LinearLayout>
