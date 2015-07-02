@@ -11,6 +11,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 
 import com.facebook.AccessToken;
@@ -61,6 +62,16 @@ public class MainActivity extends ActionBarActivity {
     /* Used to track user logging in/out off Facebook */
     private AccessTokenTracker mFacebookAccessTokenTracker;
 
+    /* *************************************
+     *              PASSWORD               *
+     ***************************************/
+    private Button mPasswordLoginButton;
+
+    /* *************************************
+     *            ANONYMOUSLY              *
+     ***************************************/
+    private Button mAnonymousLoginButton;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -82,6 +93,29 @@ public class MainActivity extends ActionBarActivity {
                 MainActivity.this.onFacebookAccessTokenChange(currentAccessToken);
             }
         };
+
+        /* *************************************
+         *               PASSWORD              *
+         ***************************************/
+        mPasswordLoginButton = (Button) findViewById(R.id.login_with_password);
+        mPasswordLoginButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                loginWithPassword();
+            }
+        });
+
+        /* *************************************
+         *              ANONYMOUSLY            *
+         ***************************************/
+        /* Load and setup the anonymous login button */
+        mAnonymousLoginButton = (Button) findViewById(R.id.login_anonymously);
+        mAnonymousLoginButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                loginAnonymously();
+            }
+        });
 
 
         /* *************************************
@@ -260,9 +294,9 @@ public class MainActivity extends ActionBarActivity {
             /*
             mGoogleLoginButton.setVisibility(View.GONE);
             mTwitterLoginButton.setVisibility(View.GONE);
+            */
             mPasswordLoginButton.setVisibility(View.GONE);
             mAnonymousLoginButton.setVisibility(View.GONE);
-            */
             mLoggedInStatusTextView.setVisibility(View.VISIBLE);
             /* show a provider specific status text */
             String name = null;
@@ -286,9 +320,9 @@ public class MainActivity extends ActionBarActivity {
             /*
             mGoogleLoginButton.setVisibility(View.VISIBLE);
             mTwitterLoginButton.setVisibility(View.VISIBLE);
+            */
             mPasswordLoginButton.setVisibility(View.VISIBLE);
             mAnonymousLoginButton.setVisibility(View.VISIBLE);
-            */
             mLoggedInStatusTextView.setVisibility(View.GONE);
         }
         this.mAuthData = authData;
@@ -296,6 +330,9 @@ public class MainActivity extends ActionBarActivity {
         supportInvalidateOptionsMenu();
     }
 
+    /**
+     * @return Bitmap - facebook profile picture
+     * @param userID Unique facebook user id. */
     public static Bitmap getFacebookProfilePicture(String userID) {
         URL imageURL = null;
         try {
@@ -342,5 +379,23 @@ public class MainActivity extends ActionBarActivity {
                 setAuthenticatedUser(null);
             }
         }
+    }
+
+    /* ************************************
+     *              PASSWORD              *
+     **************************************
+     */
+    public void loginWithPassword() {
+        mAuthProgressDialog.show();
+        mFirebaseRef.authWithPassword("test@talayhan.me", "test1234", new AuthResultHandler("password"));
+    }
+
+    /* ************************************
+     *             ANONYMOUSLY            *
+     **************************************
+     */
+    private void loginAnonymously() {
+        mAuthProgressDialog.show();
+        mFirebaseRef.authAnonymously(new AuthResultHandler("anonymous"));
     }
 }

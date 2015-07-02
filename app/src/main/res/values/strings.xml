@@ -8,5 +8,6 @@
     <string name="action_logout">Logout</string>
     <string name="login_with_password">Login with password</string>
     <string name="login_anonymously">Login anonymously</string>
+    <string name="sign_up">Sign up</string>
 
 </resources>
