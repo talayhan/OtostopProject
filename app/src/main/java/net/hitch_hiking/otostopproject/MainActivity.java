@@ -3,6 +3,7 @@ package net.hitch_hiking.otostopproject;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
@@ -85,7 +86,7 @@ public class MainActivity extends ActionBarActivity {
         //Firebase.setAndroidContext(this);
         //FacebookSdk.sdkInitialize(this);
         setContentView(R.layout.activity_main);
-
+        setPreferences();
         /* *************************************
          *              FACEBOOK               *
          ***************************************/
@@ -184,7 +185,6 @@ public class MainActivity extends ActionBarActivity {
         return super.onOptionsItemSelected(item);
     }
 
-
     @Override
     protected void onDestroy() {
         super.onDestroy();
@@ -196,7 +196,6 @@ public class MainActivity extends ActionBarActivity {
         // if changing configurations, stop tracking firebase session.
         mFirebaseRef.removeAuthStateListener(mAuthStateListener);
     }
-
 
     /**
      * This method fires when any startActivityForResult finishes. The requestCode maps to
@@ -229,7 +228,6 @@ public class MainActivity extends ActionBarActivity {
         //}
     }
 
-
     /**
      * Unauthenticate from Firebase and from providers where necessary.
      */
@@ -255,7 +253,6 @@ public class MainActivity extends ActionBarActivity {
             setAuthenticatedUser(null);
         }
     }
-
 
     /**
      * This method will attempt to authenticate a user to firebase given an oauth_token (and other
@@ -383,7 +380,6 @@ public class MainActivity extends ActionBarActivity {
                 .show();
     }
 
-
     /* ************************************
      *             FACEBOOK               *
      **************************************
@@ -424,5 +420,15 @@ public class MainActivity extends ActionBarActivity {
     private void startMapActivity(){
         Intent i = new Intent(MainActivity.this, MapsActivity.class);
         startActivity(i);
+    }
+
+    private void setPreferences(){
+        SharedPreferences pref = getApplicationContext().getSharedPreferences(Intro.PREFERENCES_FILE_NAME, MODE_WORLD_READABLE);
+        SharedPreferences.Editor editor = pref.edit();
+
+        editor.putInt("key", 111);
+        if (editor.commit()){
+            Log.d("DEBUG","Succesfully key added!");
+        }
     }
 }

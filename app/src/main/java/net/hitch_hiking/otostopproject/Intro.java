@@ -1,6 +1,7 @@
 package net.hitch_hiking.otostopproject;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.view.View;
@@ -12,8 +13,23 @@ import com.github.paolorotolo.appintro.AppIntro;
  * Created by root on 7/1/15.
  */
 public class Intro extends AppIntro {
+
+    public static final String PREFERENCES_FILE_NAME = "MyAppPreferences";
+
     @Override
     public void init(Bundle bundle) {
+        int preferencesResult;
+        SharedPreferences pref = getApplicationContext().getSharedPreferences(PREFERENCES_FILE_NAME, MODE_WORLD_READABLE);
+
+        preferencesResult = pref.getInt("key", 0); // getting integer
+
+        if (preferencesResult > 0) {
+            loadMainActivity();
+            Toast.makeText(getApplicationContext(),"[+]GetSharedPre return is: " + preferencesResult , Toast.LENGTH_SHORT).show();
+        }else{
+            Toast.makeText(getApplicationContext(),"[+]GetSharedPre return is: " + preferencesResult, Toast.LENGTH_SHORT).show();
+        }
+
         // Add your slide's fragments here
         // AppIntro will automatically generate the dots indicator and buttons.
         addSlide(new FirstSlide(), getApplicationContext());
@@ -42,8 +58,8 @@ public class Intro extends AppIntro {
 
     @Override
     public void onSkipPressed() {
-        loadMainActivity();
         Toast.makeText(getApplicationContext(),getString(R.string.skip_string), Toast.LENGTH_SHORT).show();
+        loadMainActivity();
     }
 
     @Override
