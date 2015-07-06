@@ -9,5 +9,6 @@
     <string name="login_with_password">Login with password</string>
     <string name="login_anonymously">Login anonymously</string>
     <string name="sign_up">Sign up</string>
+    <string name="title_activity_maps">Map</string>
 
 </resources>

@@ -13,6 +13,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.facebook.AccessToken;
 import com.facebook.AccessTokenTracker;
@@ -72,6 +73,11 @@ public class MainActivity extends ActionBarActivity {
      ***************************************/
     private Button mAnonymousLoginButton;
 
+    /* *************************************
+     *            SIGN_UP                  *
+     ***************************************/
+    private Button mSignUpButton;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -114,6 +120,17 @@ public class MainActivity extends ActionBarActivity {
             @Override
             public void onClick(View view) {
                 loginAnonymously();
+            }
+        });
+
+        /* *************************************
+         *            SIGN_UP                  *
+         ***************************************/
+        mSignUpButton = (Button) findViewById(R.id.sign_up);
+        mSignUpButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(MainActivity.this,"Not implemented yet!",Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -297,6 +314,7 @@ public class MainActivity extends ActionBarActivity {
             */
             mPasswordLoginButton.setVisibility(View.GONE);
             mAnonymousLoginButton.setVisibility(View.GONE);
+            mSignUpButton.setVisibility(View.GONE);
             mLoggedInStatusTextView.setVisibility(View.VISIBLE);
             /* show a provider specific status text */
             String name = null;
@@ -314,6 +332,7 @@ public class MainActivity extends ActionBarActivity {
                 mLoggedInStatusTextView.setText("Logged in as " + name + " (" + authData.getProvider() + ")" +
                 "Facebook ID"+ authData.getProviderData().get("id") );
             }
+            startMapActivity();
         } else {
             /* No authenticated user show all the login buttons */
             mFacebookLoginButton.setVisibility(View.VISIBLE);
@@ -321,6 +340,7 @@ public class MainActivity extends ActionBarActivity {
             mGoogleLoginButton.setVisibility(View.VISIBLE);
             mTwitterLoginButton.setVisibility(View.VISIBLE);
             */
+            mSignUpButton.setVisibility(View.VISIBLE);
             mPasswordLoginButton.setVisibility(View.VISIBLE);
             mAnonymousLoginButton.setVisibility(View.VISIBLE);
             mLoggedInStatusTextView.setVisibility(View.GONE);
@@ -397,5 +417,12 @@ public class MainActivity extends ActionBarActivity {
     private void loginAnonymously() {
         mAuthProgressDialog.show();
         mFirebaseRef.authAnonymously(new AuthResultHandler("anonymous"));
+    }
+
+    /**
+     * */
+    private void startMapActivity(){
+        Intent i = new Intent(MainActivity.this, MapsActivity.class);
+        startActivity(i);
     }
 }
