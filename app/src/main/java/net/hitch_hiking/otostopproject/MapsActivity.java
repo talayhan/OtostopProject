@@ -72,29 +72,16 @@ public class MapsActivity extends FragmentActivity implements GeoQueryEventListe
     private TextView mUserEmail;
     private ProfilePictureView mUserPhoto;
 
-    private void getUserInfoFromBundle(){
-        Bundle extras = getIntent().getExtras();
-        if (extras != null) {
-            String userName = extras.getString("user_name");
-            String userEmail = extras.getString("user_email");
-            String userID = extras.getString("user_id");
-            fillUserPage(userName,userEmail,userID);
-        }else{
-            Toast.makeText(this,"[-]Extras are gotten NULL!", Toast.LENGTH_SHORT).show();
-        }
-    }
-
-    private void fillUserPage(String userName, String userEmail, String userID) {
-        mUserName.setText(userName);
-        mUserEmail.setText(userEmail);
-        // get user profile picture from facebook developer console
-        mUserPhoto.setProfileId(userID);
-    }
-
-    private void setupHeaderViews(){
-        mUserName = (TextView) findViewById(R.id.user_name);
-        mUserEmail = (TextView) findViewById(R.id.user_email);
-        mUserPhoto = (ProfilePictureView) findViewById(R.id.user_photo);
+    public GoogleMap.OnInfoWindowClickListener getInfoWindowClickListener()
+    {
+        return new GoogleMap.OnInfoWindowClickListener()
+        {
+            @Override
+            public void onInfoWindowClick(Marker marker)
+            {
+                Toast.makeText(getApplicationContext(), "Clicked a window with title..." + marker.getTitle(), Toast.LENGTH_SHORT).show();
+            }
+        };
     }
 
     @Override
@@ -109,17 +96,6 @@ public class MapsActivity extends FragmentActivity implements GeoQueryEventListe
         setupHeaderViews();
         getUserInfoFromBundle();
 
-        this.mUserPhoto.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Bundle extras = getIntent().getExtras();
-                String userID = null;
-                if (extras != null) {
-                    userID = extras.getString("user_id");
-                }
-            }
-        });
-
         // setup map and camera position
         SupportMapFragment mapFragment = (SupportMapFragment)getSupportFragmentManager().findFragmentById(R.id.map);
         this.mMap = mapFragment.getMap();
@@ -130,6 +106,16 @@ public class MapsActivity extends FragmentActivity implements GeoQueryEventListe
         this.mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLngCenter, INITIAL_ZOOM_LEVEL));
         this.mMap.setOnCameraChangeListener(this);
         this.mMap.setMyLocationEnabled(true);
+        /* Marker click listener is here. */
+        this.mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
+            @Override
+            public boolean onMarkerClick(Marker marker) {
+                Toast.makeText(getApplicationContext(), "Clicked a window with title..." + marker.getTitle(), Toast.LENGTH_SHORT).show();
+                return true;
+            }
+        });
+
+        //this.mMap.setOnInfoWindowClickListener(getInfoWindowClickListener());
 
         Firebase.setAndroidContext(this);
 
@@ -397,5 +383,30 @@ public class MapsActivity extends FragmentActivity implements GeoQueryEventListe
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
         drawerToggle.onConfigurationChanged(newConfig);
+    }
+
+    private void getUserInfoFromBundle(){
+        Bundle extras = getIntent().getExtras();
+        if (extras != null) {
+            String userName = extras.getString("user_name");
+            String userEmail = extras.getString("user_email");
+            String userID = extras.getString("user_id");
+            fillUserPage(userName,userEmail,userID);
+        }else{
+            Toast.makeText(this,"[-]Extras are gotten NULL!", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private void fillUserPage(String userName, String userEmail, String userID) {
+        mUserName.setText(userName);
+        mUserEmail.setText(userEmail);
+        // get user profile picture from facebook developer console
+        mUserPhoto.setProfileId(userID);
+    }
+
+    private void setupHeaderViews(){
+        mUserName = (TextView) findViewById(R.id.user_name);
+        mUserEmail = (TextView) findViewById(R.id.user_email);
+        mUserPhoto = (ProfilePictureView) findViewById(R.id.user_photo);
     }
 }
