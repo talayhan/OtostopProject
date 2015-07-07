@@ -7,8 +7,28 @@
     <string name="login_with_facebook">Login with Facebook</string>
     <string name="action_logout">Logout</string>
     <string name="login_with_password">Login with password</string>
-    <string name="login_anonymously">Login anonymously</string>
+    <string name="login_anonymously">Login anon</string>
     <string name="sign_up">Sign up</string>
     <string name="title_activity_maps">Map</string>
+    <string name="title_text">Otostop</string>
+
+    <string name="title_activity_fab">Fab Activity</string>
+
+    <string name="home">Home</string>
+    <string name="birthday">21/01/1993</string>
+    <string name="car"></string>
+    <string name="phone">5535090975</string>
+    <string name="settings">Settings</string>
+    <string name="alert_text">Enter some text</string>
+
+    <string name="drawer_open">Open navigation drawer</string>
+    <string name="drawer_close">Close navigation drawer</string>
+
+    <string name="action_show">Show</string>
+    <string name="some_text">Some Text</string>
+
+    <!-- preferences options -->
+    <string name="personal_info">Personal Info</string>
+    <string name="password_processes">Password Stuff</string>
 
 </resources>

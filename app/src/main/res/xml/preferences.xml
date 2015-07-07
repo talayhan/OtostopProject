@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <PreferenceCategory android:title="@string/personal_info" >
+        <EditTextPreference android:title="AD"
+            android:key="username"
+            android:summary="Ozan"></EditTextPreference>
+        <EditTextPreference android:title="SOYAD"
+            android:key="userSurname"
+            android:summary="Ay"></EditTextPreference>
+        <EditTextPreference android:title="E-POSTA ADRESİ"
+            android:key="userEmail"
+            android:summary="ozannay@gmail.com"></EditTextPreference>
+        <EditTextPreference android:title="DOĞUM GÜNÜ"
+            android:key="userBirthday"
+            android:summary="21/01/1993"></EditTextPreference>
+        <EditTextPreference android:title="TELEFON NUMARASI"
+            android:key="userPhone"
+            android:summary="5535090975"></EditTextPreference>
+        <EditTextPreference android:title="ARABA BİLGİSİ"
+            android:key="userCar"
+            android:summary=""
+            android:enabled="false"></EditTextPreference>
+        <EditTextPreference android:title="PUAN"
+            android:summary="0.0"
+            android:enabled="false"></EditTextPreference>
+    </PreferenceCategory>
+    <PreferenceCategory android:title="@string/password_processes">
+        <EditTextPreference android:title="Şifrenizi değiştirmek için tıklayınız."
+            android:key="userNewPass"
+            android:summary="********"></EditTextPreference>
+        <EditTextPreference android:title="Şifrenizi tekrar giriniz."
+            android:key="userNewPassAgain"
+            android:summary="********"></EditTextPreference>
+    </PreferenceCategory>
+</PreferenceScreen>

@@ -2,10 +2,9 @@ package net.hitch_hiking.otostopproject;
 
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
@@ -25,12 +24,8 @@ import com.firebase.client.AuthData;
 import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
 
-import java.io.IOException;
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
-
 
 public class MainActivity extends ActionBarActivity {
 
@@ -161,7 +156,23 @@ public class MainActivity extends ActionBarActivity {
         /* Check if the user is authenticated with Firebase already. If this is the case we can set the authenticated
          * user and hide hide any login buttons */
         mFirebaseRef.addAuthStateListener(mAuthStateListener);
+    }
 
+    @Override
+    public void onBackPressed() {
+        new AlertDialog.Builder(this)
+                .setMessage("Are you sure you want to exit?")
+                .setCancelable(false)
+                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        Intent intent = new Intent(Intent.ACTION_MAIN);
+                        intent.addCategory(Intent.CATEGORY_HOME);
+                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                        startActivity(intent);
+                    }
+                })
+                .setNegativeButton("No", null)
+                .show();
     }
 
     @Override
@@ -251,6 +262,7 @@ public class MainActivity extends ActionBarActivity {
             }
             /* Update authenticated user and show login buttons */
             setAuthenticatedUser(null);
+            getSupportActionBar().hide();
         }
     }
 
@@ -329,7 +341,7 @@ public class MainActivity extends ActionBarActivity {
                 mLoggedInStatusTextView.setText("Logged in as " + name + " (" + authData.getProvider() + ")" +
                 "Facebook ID"+ authData.getProviderData().get("id") );
             }
-            startMapActivity();
+            startMapActivity(authData);
         } else {
             /* No authenticated user show all the login buttons */
             mFacebookLoginButton.setVisibility(View.VISIBLE);
@@ -345,27 +357,6 @@ public class MainActivity extends ActionBarActivity {
         this.mAuthData = authData;
         /* invalidate options menu to hide/show the logout button */
         supportInvalidateOptionsMenu();
-    }
-
-    /**
-     * @return Bitmap - facebook profile picture
-     * @param userID Unique facebook user id. */
-    public static Bitmap getFacebookProfilePicture(String userID) {
-        URL imageURL = null;
-        try {
-            imageURL = new URL("https://graph.facebook.com/" + userID + "/picture?type=large");
-        } catch (MalformedURLException e) {
-            e.printStackTrace();
-        }
-
-        Bitmap bitmap = null;
-        try {
-            bitmap = BitmapFactory.decodeStream(imageURL.openConnection().getInputStream());
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        return bitmap;
     }
 
     /**
@@ -417,8 +408,11 @@ public class MainActivity extends ActionBarActivity {
 
     /**
      * */
-    private void startMapActivity(){
+    private void startMapActivity(AuthData authData){
         Intent i = new Intent(MainActivity.this, MapsActivity.class);
+        i.putExtra("user_name", (String) authData.getProviderData().get("displayName"));
+        i.putExtra("user_email", (String) authData.getProviderData().get("email"));
+        i.putExtra("user_id", (String) authData.getProviderData().get("id"));
         startActivity(i);
     }
 

@@ -7,17 +7,84 @@
     android:gravity="center"
     android:orientation="vertical"
     tools:context=".MainActivity"
-    android:id="@+id/linearLayout">
+    android:id="@+id/linearLayout"
+    android:padding="25dp"
+    android:background="#212121">
 
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/title_text"
+        android:textSize="@dimen/title_text_size"
+        android:textColor="#B6B6B6"
+        android:id="@+id/title_text" />
+
+    <EditText
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:inputType="textEmailAddress"
+        android:ems="10"
+        android:id="@+id/editText"
+        android:layout_marginTop="15dp"
+        android:textColor="#B6B6B6"
+        android:text="E-mail" />
+
+    <EditText
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:inputType="textPassword"
+        android:ems="10"
+        android:id="@+id/editText2"
+        android:layout_marginTop="15dp"
+        android:textColor="#B6B6B6"
+        android:text="Password" />
 
     <TextView
         android:id="@+id/login_status"
-        android:visibility="gone"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
         android:textAlignment="center"
-        android:layout_marginTop="20dp" />
+        android:layout_marginTop="15dp"
+        android:text="Forgot Password?"
+        android:textColor="#B6B6B6" />
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:weightSum="2"
+        android:orientation="horizontal"
+        android:layout_marginTop="15dp">
+
+        <Button
+            android:id="@+id/login_anonymously"
+            android:text="@string/login_anonymously"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="#B6B6B6"
+            android:layout_weight="1"
+            android:textColor="#212121"
+            android:layout_marginRight="10dp" />
+
+        <Button
+            android:id="@+id/sign_up"
+            android:text="@string/sign_up"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="#B6B6B6"
+            android:layout_weight="1"
+            android:textColor="#212121"
+            android:layout_marginLeft="10dp" />
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/login_with_password"
+        android:text="@string/login_with_password"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#B6B6B6"
+        android:textColor="#212121"
+        android:layout_marginTop="15dp" />
 
     <com.facebook.login.widget.LoginButton
         android:id="@+id/login_with_facebook"
@@ -26,27 +93,6 @@
         android:layout_gravity="center_horizontal"
         android:text="@string/login_with_facebook"
         android:textSize="@dimen/fb_text_size"
-        android:paddingTop="@dimen/padding_top"
-        android:paddingBottom="@dimen/padding_bottom"
-        />
-
-    <Button
-        android:id="@+id/login_with_password"
-        android:text="@string/login_with_password"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
-
-    <Button
-        android:id="@+id/login_anonymously"
-        android:text="@string/login_anonymously"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
-
-    <Button
-        android:id="@+id/sign_up"
-        android:text="@string/sign_up"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
-
+        android:layout_marginTop="15dp" />
 
 </LinearLayout>

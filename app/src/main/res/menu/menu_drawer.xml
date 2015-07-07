@@ -1,0 +1,24 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/drawer_birthday"
+            android:icon="@drawable/birthday"
+            android:title="@string/birthday"
+            android:enabled="false"/>
+        <item
+            android:id="@+id/drawer_phone"
+            android:icon="@drawable/phone"
+            android:title="@string/phone"
+            android:enabled="false"/>
+        <item
+            android:id="@+id/drawer_car_info"
+            android:icon="@drawable/car"
+            android:title="@string/car"
+            android:enabled="false"/>
+        <item
+            android:id="@+id/drawer_rating"
+            android:icon="@drawable/star"
+            android:title="0.0"
+            android:enabled="false"/>
+    </group>
+</menu>

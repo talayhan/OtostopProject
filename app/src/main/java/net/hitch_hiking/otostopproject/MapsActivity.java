@@ -1,13 +1,35 @@
 package net.hitch_hiking.otostopproject;
 
 import android.app.AlertDialog;
+import android.content.Intent;
+import android.content.res.Configuration;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.SystemClock;
+import android.support.design.widget.NavigationView;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
+import android.support.v4.view.GravityCompat;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.widget.Toolbar;
+import android.util.Log;
+import android.view.MenuItem;
+import android.view.View;
 import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.animation.Interpolator;
+import android.widget.CompoundButton;
+import android.widget.ImageButton;
+import android.widget.ImageView;
+import android.widget.TextView;
+import android.widget.Toast;
+import android.widget.ToggleButton;
 
 import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
@@ -17,6 +39,7 @@ import com.firebase.geofire.GeoQuery;
 import com.firebase.geofire.GeoQueryEventListener;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.Circle;
@@ -25,6 +48,9 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -41,11 +67,72 @@ public class MapsActivity extends FragmentActivity implements GeoQueryEventListe
 
     private Map<String,Marker> markers;
 
+    private DrawerLayout drawerLayout;
+    private Toolbar toolbar = null;
+    private ActionBarDrawerToggle drawerToggle;
+
+    private FragmentManager fragmentManager;
+
+    private TextView mUserName;
+    private TextView mUserEmail;
+    private ImageView mUserPhoto;
+
+    private void getUserInfoFromBundle(){
+        Bundle extras = getIntent().getExtras();
+        if (extras != null) {
+            String userName = extras.getString("user_name");
+            String userEmail = extras.getString("user_email");
+            String userID = extras.getString("user_id");
+            fillUserPage(userName,userEmail,userID);
+        }else{
+            Toast.makeText(this,"[-]Extras are gotten NULL!", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private void fillUserPage(String userName, String userEmail, String userID) {
+        mUserName.setText(userName);
+        mUserEmail.setText(userEmail);
+
+    }
+
+    private void setupHeaderViews(){
+        mUserName = (TextView) findViewById(R.id.user_name);
+        mUserEmail = (TextView) findViewById(R.id.user_email);
+        mUserPhoto = (ImageView) findViewById(R.id.user_photo);
+    }
+
+    /**
+     * @return Bitmap - facebook profile picture
+     * @param userID Unique facebook user id. */
+    public static Bitmap getFacebookProfilePicture(String userID) {
+        URL imageURL = null;
+        try {
+            imageURL = new URL("https://graph.facebook.com/" + userID + "/picture?type=large");
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        }
+
+        Bitmap bitmap = null;
+        try {
+            bitmap = BitmapFactory.decodeStream(imageURL.openConnection().getInputStream());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return bitmap;
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_maps);
+        setContentView(R.layout.home_activity_layout);
         setUpMapIfNeeded();
+
+        setupToolbar();
+        setupDrawerLayout();
+        setupInit();
+        setupHeaderViews();
+        getUserInfoFromBundle();
 
         // setup map and camera position
         SupportMapFragment mapFragment = (SupportMapFragment)getSupportFragmentManager().findFragmentById(R.id.map);
@@ -64,9 +151,14 @@ public class MapsActivity extends FragmentActivity implements GeoQueryEventListe
         this.geoFire = new GeoFire(new Firebase(GEO_FIRE_REF));
         // radius in km
         this.geoQuery = this.geoFire.queryAtLocation(INITIAL_CENTER, 1);
-
         // setup markers
-        this.markers = new HashMap<String, Marker>();
+        this.markers = new HashMap<>();
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        finish();
     }
 
     @Override
@@ -202,7 +294,7 @@ public class MapsActivity extends FragmentActivity implements GeoQueryEventListe
             @Override
             public void run() {
                 float elapsed = SystemClock.uptimeMillis() - start;
-                float t = elapsed/DURATION_MS;
+                float t = elapsed / DURATION_MS;
                 float v = interpolator.getInterpolation(t);
 
                 double currentLat = (lat - startPosition.latitude) * v + startPosition.latitude;
@@ -217,4 +309,108 @@ public class MapsActivity extends FragmentActivity implements GeoQueryEventListe
         });
     }
 
+    private void setupToolbar() {
+        toolbar = (Toolbar) findViewById(R.id.toolbar);
+        //setSupportActionBar(toolbar);
+        //final ActionBar actionBar = getSupportActionBar();
+        /*
+        if (actionBar != null) {
+            actionBar.setHomeAsUpIndicator(R.drawable.ic_menu_white_24dp);
+            actionBar.setDisplayHomeAsUpEnabled(true);
+        }
+        */
+
+        ToggleButton toggle = (ToggleButton) findViewById(R.id.togglebutton);
+        toggle.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked) {
+                    // The toggle is enabled
+                } else {
+                    // The toggle is disabled
+                }
+            }
+        });
+
+        /* Settinge . */
+        final ImageButton settingBtn = (ImageButton) findViewById(R.id.settingsButton);
+        settingBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intentSettings = new Intent(MapsActivity.this, SettingsActivity.class);
+                MapsActivity.this.startActivity(intentSettings);
+                Log.i("Content ", " App layout ");
+            }
+        });
+    }
+
+    private void setupDrawerLayout() {
+        drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+
+        NavigationView navigationView = (NavigationView) findViewById(R.id.navigation_view);
+        navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(MenuItem menuItem) {
+                selectDrawerItem(menuItem);
+                return true;
+            }
+        });
+
+        drawerToggle = new ActionBarDrawerToggle(this, drawerLayout, toolbar, R.string.drawer_open, R.string.drawer_close);
+        drawerLayout.setDrawerListener(drawerToggle);
+    }
+
+    private void setupInit() {
+        //Location url = getLocation(this);
+        fragmentManager = getSupportFragmentManager();
+        //fragmentManager.beginTransaction().replace(R.id.content_frame, new MapFragment()).commit();
+
+        drawerLayout.openDrawer(GravityCompat.START);
+    }
+
+    private void selectDrawerItem(MenuItem menuItem) {
+        Fragment fragment = null;
+        Class fragmentClass;
+        Float elevation = getResources().getDimension(R.dimen.elevation_toolbar);
+        fragmentClass = MapFragment.class;
+        /* MapFragment burada set ediliyor.
+        * Seyahat buttonu da buraya.*/
+        try {
+            fragment = (Fragment) fragmentClass.newInstance();
+        } catch (InstantiationException e) {
+            e.printStackTrace();
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        }
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+
+        fragmentTransaction.replace(R.id.map, fragment);
+        fragmentTransaction.addToBackStack("FRAGMENT");
+        fragmentTransaction.commit();
+
+        menuItem.setChecked(true);
+        setTitle(menuItem.getTitle());
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
+            toolbar.setElevation(elevation);
+
+        drawerLayout.closeDrawers();
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        return drawerToggle.onOptionsItemSelected(item) || super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    protected void onPostCreate(Bundle savedInstanceState) {
+        super.onPostCreate(savedInstanceState);
+        drawerToggle.syncState();
+    }
+
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        drawerToggle.onConfigurationChanged(newConfig);
+    }
 }
