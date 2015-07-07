@@ -3,8 +3,6 @@ package net.hitch_hiking.otostopproject;
 import android.app.AlertDialog;
 import android.content.Intent;
 import android.content.res.Configuration;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
@@ -26,11 +24,11 @@ import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.animation.Interpolator;
 import android.widget.CompoundButton;
 import android.widget.ImageButton;
-import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ToggleButton;
 
+import com.facebook.login.widget.ProfilePictureView;
 import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
 import com.firebase.geofire.GeoFire;
@@ -48,9 +46,6 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
-import java.io.IOException;
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -75,7 +70,7 @@ public class MapsActivity extends FragmentActivity implements GeoQueryEventListe
 
     private TextView mUserName;
     private TextView mUserEmail;
-    private ImageView mUserPhoto;
+    private ProfilePictureView mUserPhoto;
 
     private void getUserInfoFromBundle(){
         Bundle extras = getIntent().getExtras();
@@ -92,34 +87,14 @@ public class MapsActivity extends FragmentActivity implements GeoQueryEventListe
     private void fillUserPage(String userName, String userEmail, String userID) {
         mUserName.setText(userName);
         mUserEmail.setText(userEmail);
-
+        // get user profile picture from facebook developer console
+        mUserPhoto.setProfileId(userID);
     }
 
     private void setupHeaderViews(){
         mUserName = (TextView) findViewById(R.id.user_name);
         mUserEmail = (TextView) findViewById(R.id.user_email);
-        mUserPhoto = (ImageView) findViewById(R.id.user_photo);
-    }
-
-    /**
-     * @return Bitmap - facebook profile picture
-     * @param userID Unique facebook user id. */
-    public static Bitmap getFacebookProfilePicture(String userID) {
-        URL imageURL = null;
-        try {
-            imageURL = new URL("https://graph.facebook.com/" + userID + "/picture?type=large");
-        } catch (MalformedURLException e) {
-            e.printStackTrace();
-        }
-
-        Bitmap bitmap = null;
-        try {
-            bitmap = BitmapFactory.decodeStream(imageURL.openConnection().getInputStream());
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        return bitmap;
+        mUserPhoto = (ProfilePictureView) findViewById(R.id.user_photo);
     }
 
     @Override
@@ -133,6 +108,17 @@ public class MapsActivity extends FragmentActivity implements GeoQueryEventListe
         setupInit();
         setupHeaderViews();
         getUserInfoFromBundle();
+
+        this.mUserPhoto.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Bundle extras = getIntent().getExtras();
+                String userID = null;
+                if (extras != null) {
+                    userID = extras.getString("user_id");
+                }
+            }
+        });
 
         // setup map and camera position
         SupportMapFragment mapFragment = (SupportMapFragment)getSupportFragmentManager().findFragmentById(R.id.map);
@@ -363,7 +349,6 @@ public class MapsActivity extends FragmentActivity implements GeoQueryEventListe
         //Location url = getLocation(this);
         fragmentManager = getSupportFragmentManager();
         //fragmentManager.beginTransaction().replace(R.id.content_frame, new MapFragment()).commit();
-
         drawerLayout.openDrawer(GravityCompat.START);
     }
 
