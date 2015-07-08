@@ -7,7 +7,7 @@
     <string name="login_with_facebook">Login with Facebook</string>
     <string name="action_logout">Logout</string>
     <string name="login_with_password">Login with password</string>
-    <string name="login_anonymously">Login anon</string>
+    <string name="login">Login</string>
     <string name="sign_up">Sign up</string>
     <string name="title_activity_maps">Map</string>
     <string name="title_text">Otostop</string>
@@ -30,5 +30,9 @@
     <!-- preferences options -->
     <string name="personal_info">Personal Info</string>
     <string name="password_processes">Password Stuff</string>
+    <string name="log_in">LOG IN</string>
+    <string name="e_mail">E-mail</string>
+    <string name="password">Password</string>
+    <string name="forgot_password">Forgot Password?</string>
 
 </resources>

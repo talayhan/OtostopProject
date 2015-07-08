@@ -4,7 +4,8 @@
     <dimen name="activity_vertical_margin">16dp</dimen>
     <dimen name="padding_top">10sp</dimen>
     <dimen name="padding_bottom">10sp</dimen>
-    <dimen name="fb_text_size">16dp</dimen>
+    <dimen name="fb_text_size">25dp</dimen>
+    <dimen name="fb_button_size">60dp</dimen>
     <dimen name="title_text_size">45dp</dimen>
 
     <dimen name="card_horizontal_margin">16dp</dimen>
@@ -25,4 +26,6 @@
     <dimen name="scrollview_margin">24dp</dimen>
     <dimen name="card_margin">16dp</dimen>
     <dimen name="fab_margin">16dp</dimen>
+
+    <dimen name="padding_top_head">30dp</dimen>
 </resources>

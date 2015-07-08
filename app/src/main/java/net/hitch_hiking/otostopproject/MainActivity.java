@@ -2,9 +2,12 @@ package net.hitch_hiking.otostopproject;
 
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
@@ -13,7 +16,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.facebook.AccessToken;
 import com.facebook.AccessTokenTracker;
@@ -74,13 +76,31 @@ public class MainActivity extends ActionBarActivity {
      ***************************************/
     private Button mSignUpButton;
 
+    private boolean checkInternetConnection(){
+        ConnectivityManager conMgr = (ConnectivityManager)getSystemService(Context.CONNECTIVITY_SERVICE);
+
+        if ( conMgr.getNetworkInfo(0).getState() == NetworkInfo.State.CONNECTED
+                || conMgr.getNetworkInfo(1).getState() == NetworkInfo.State.CONNECTING ) {
+
+            // notify user you are online
+            // nothing to do
+            return true;
+        }
+        else if ( conMgr.getNetworkInfo(0).getState() == NetworkInfo.State.DISCONNECTED
+                || conMgr.getNetworkInfo(1).getState() == NetworkInfo.State.DISCONNECTED) {
+            // notify user you are not online
+            //
+        }
+        return false;
+    }
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         //Firebase.setAndroidContext(this);
         //FacebookSdk.sdkInitialize(this);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.sign_up);
         setPreferences();
         /* *************************************
          *              FACEBOOK               *
@@ -110,8 +130,8 @@ public class MainActivity extends ActionBarActivity {
         /* *************************************
          *              ANONYMOUSLY            *
          ***************************************/
-        /* Load and setup the anonymous login button */
-        mAnonymousLoginButton = (Button) findViewById(R.id.login_anonymously);
+        /* Load and setup the anonymous login button
+        mAnonymousLoginButton = (Button) findViewById(R.id.sign_up_button);
         mAnonymousLoginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -119,16 +139,19 @@ public class MainActivity extends ActionBarActivity {
             }
         });
 
+        */
+
         /* *************************************
          *            SIGN_UP                  *
-         ***************************************/
-        mSignUpButton = (Button) findViewById(R.id.sign_up);
+         ***************************************
+        mSignUpButton = (Button) findViewById(R.id.sign_up_button);
         mSignUpButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Toast.makeText(MainActivity.this,"Not implemented yet!",Toast.LENGTH_SHORT).show();
             }
         });
+        */
 
 
         /* *************************************
@@ -320,10 +343,11 @@ public class MainActivity extends ActionBarActivity {
             /*
             mGoogleLoginButton.setVisibility(View.GONE);
             mTwitterLoginButton.setVisibility(View.GONE);
-            */
+            *
             mPasswordLoginButton.setVisibility(View.GONE);
             mAnonymousLoginButton.setVisibility(View.GONE);
             mSignUpButton.setVisibility(View.GONE);
+            */
             mLoggedInStatusTextView.setVisibility(View.VISIBLE);
             /* show a provider specific status text */
             String name = null;
@@ -348,10 +372,11 @@ public class MainActivity extends ActionBarActivity {
             /*
             mGoogleLoginButton.setVisibility(View.VISIBLE);
             mTwitterLoginButton.setVisibility(View.VISIBLE);
-            */
+
             mSignUpButton.setVisibility(View.VISIBLE);
             mPasswordLoginButton.setVisibility(View.VISIBLE);
             mAnonymousLoginButton.setVisibility(View.VISIBLE);
+            */
             mLoggedInStatusTextView.setVisibility(View.GONE);
         }
         this.mAuthData = authData;

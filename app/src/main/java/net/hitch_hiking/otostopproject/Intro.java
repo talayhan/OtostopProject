@@ -23,7 +23,7 @@ public class Intro extends AppIntro {
 
         preferencesResult = pref.getInt("key", 0); // getting integer
 
-        if (preferencesResult > 0) {
+        if (preferencesResult == 0) {
             loadMainActivity();
             Toast.makeText(getApplicationContext(),"[+]GetSharedPre return is: " + preferencesResult , Toast.LENGTH_SHORT).show();
         }else{
@@ -52,7 +52,7 @@ public class Intro extends AppIntro {
     }
 
     private void loadMainActivity(){
-        Intent intent = new Intent(this, MainActivity.class);
+        Intent intent = new Intent(this, SignUpActivity.class);
         startActivity(intent);
     }
 

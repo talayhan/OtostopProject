@@ -51,9 +51,9 @@ import java.util.Map;
 
 public class MapsActivity extends FragmentActivity implements GeoQueryEventListener, GoogleMap.OnCameraChangeListener {
 
-    private static final GeoLocation INITIAL_CENTER = new GeoLocation(37.7789, -122.4017);
+    private static final GeoLocation INITIAL_CENTER = new GeoLocation(41.068478, 29.001695);
     private static final int INITIAL_ZOOM_LEVEL = 14;
-    private static final String GEO_FIRE_REF = "https://publicdata-transit.firebaseio.com/_geofire";
+    private static final String GEO_FIRE_REF = "https://geofiredata.firebaseio.com";
 
     private GoogleMap mMap; // Might be null if Google Play services APK is not available.
     private Circle searchCircle;
@@ -62,6 +62,7 @@ public class MapsActivity extends FragmentActivity implements GeoQueryEventListe
 
     private Map<String,Marker> markers;
 
+    /* UI members */
     private DrawerLayout drawerLayout;
     private Toolbar toolbar = null;
     private ActionBarDrawerToggle drawerToggle;
@@ -79,7 +80,7 @@ public class MapsActivity extends FragmentActivity implements GeoQueryEventListe
             @Override
             public void onInfoWindowClick(Marker marker)
             {
-                Toast.makeText(getApplicationContext(), "Clicked a window with title..." + marker.getTitle(), Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), "Clicked a window with title..." + marker.getPosition().toString() , Toast.LENGTH_SHORT).show();
             }
         };
     }
@@ -114,8 +115,6 @@ public class MapsActivity extends FragmentActivity implements GeoQueryEventListe
                 return true;
             }
         });
-
-        //this.mMap.setOnInfoWindowClickListener(getInfoWindowClickListener());
 
         Firebase.setAndroidContext(this);
 
