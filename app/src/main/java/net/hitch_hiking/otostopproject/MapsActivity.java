@@ -1,9 +1,11 @@
 package net.hitch_hiking.otostopproject;
 
 import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.graphics.Color;
+import android.location.Location;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -29,8 +31,10 @@ import android.widget.Toast;
 import android.widget.ToggleButton;
 
 import com.facebook.login.widget.ProfilePictureView;
+import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
+import com.firebase.client.ValueEventListener;
 import com.firebase.geofire.GeoFire;
 import com.firebase.geofire.GeoLocation;
 import com.firebase.geofire.GeoQuery;
@@ -39,6 +43,7 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.Circle;
 import com.google.android.gms.maps.model.CircleOptions;
@@ -53,12 +58,15 @@ public class MapsActivity extends FragmentActivity implements GeoQueryEventListe
 
     private static final GeoLocation INITIAL_CENTER = new GeoLocation(41.068478, 29.001695);
     private static final int INITIAL_ZOOM_LEVEL = 14;
-    private static final String GEO_FIRE_REF = "https://geofiredata.firebaseio.com";
+    private static final String GEO_FIRE_REF = "https://geofiredata.firebaseio.com/coordinates/";
+    private static final String FIRE_REF = "https://geofiredata.firebaseio.com/users/";
 
     private GoogleMap mMap; // Might be null if Google Play services APK is not available.
     private Circle searchCircle;
     private GeoFire geoFire;
     private GeoQuery geoQuery;
+
+    private Firebase ref;
 
     private Map<String,Marker> markers;
 
@@ -72,6 +80,11 @@ public class MapsActivity extends FragmentActivity implements GeoQueryEventListe
     private TextView mUserName;
     private TextView mUserEmail;
     private ProfilePictureView mUserPhoto;
+    private ImageButton mTravelButton;
+
+    private User myInfo;
+
+    public static int i = 0;
 
     public GoogleMap.OnInfoWindowClickListener getInfoWindowClickListener()
     {
@@ -80,9 +93,14 @@ public class MapsActivity extends FragmentActivity implements GeoQueryEventListe
             @Override
             public void onInfoWindowClick(Marker marker)
             {
-                Toast.makeText(getApplicationContext(), "Clicked a window with title..." + marker.getPosition().toString() , Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), "Clicked a window with title..." + marker.getId() , Toast.LENGTH_SHORT).show();
             }
         };
+    }
+
+    private void addUser(String userName){
+        // 41.068632, 29.001866
+        geoFire.setLocation(userName, new GeoLocation(41.068632, 29.001866));
     }
 
     @Override
@@ -118,10 +136,68 @@ public class MapsActivity extends FragmentActivity implements GeoQueryEventListe
 
         Firebase.setAndroidContext(this);
 
+        // setup firebase
+        this.ref = new Firebase(FIRE_REF);
+
         // setup GeoFire
         this.geoFire = new GeoFire(new Firebase(GEO_FIRE_REF));
+
         // radius in km
         this.geoQuery = this.geoFire.queryAtLocation(INITIAL_CENTER, 1);
+
+        this.mTravelButton = (ImageButton) findViewById(R.id.seyahat_button);
+        this.mTravelButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // add
+                ref.child(myInfo.getUserId()).setValue(myInfo);
+                // get geocode from context
+                Location myLocation =  mMap.getMyLocation();
+                if (myLocation != null) {
+                    LatLng myLatLng = new LatLng(myLocation.getLatitude(), myLocation.getLongitude());
+                    Toast.makeText(getApplicationContext(), "Latitude: " + myLatLng.latitude + "Longitude: " + myLatLng.longitude, Toast.LENGTH_LONG).show();
+                    geoFire.setLocation(myInfo.getUserId(), new GeoLocation(myLatLng.latitude, myLatLng.longitude));
+                }
+            }
+        });
+
+        // Get a reference to our posts
+        Firebase newRefTest = new Firebase(FIRE_REF+myInfo.getUserId() +"/isDriver");
+
+        // Attach an listener to read the data at our posts reference
+        newRefTest.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot snapshot) {
+                System.out.println(snapshot.getValue());
+                //Toast.makeText(getApplicationContext(), "Snapshot: " + snapshot.getValue().toString(), Toast.LENGTH_SHORT).show();
+                if (snapshot.getValue() != null) {
+                    if (snapshot.getValue().toString() == "true") {
+                        AlertDialog.Builder builder = new AlertDialog.Builder(MapsActivity.this);
+                        builder.setMessage("Would you like to chat someone?")
+                                .setCancelable(false)
+                                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int id) {
+                                        // add chat activity
+                                    }
+                                })
+                                .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int id) {
+                                        dialog.cancel();
+                                    }
+                                });
+                        AlertDialog alert = builder.create();
+                        alert.show();
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(FirebaseError firebaseError) {
+                System.out.println("The read failed: " + firebaseError.getMessage());
+            }
+        });
+
+        //setMockupLoc();
         // setup markers
         this.markers = new HashMap<>();
     }
@@ -173,7 +249,7 @@ public class MapsActivity extends FragmentActivity implements GeoQueryEventListe
      * This should only be called once and when we are sure that {@link #mMap} is not null.
      */
     private void setUpMap() {
-        mMap.addMarker(new MarkerOptions().position(new LatLng(0, 0)).title("Marker"));
+        mMap.addMarker(new MarkerOptions().position(new LatLng(0, 0)).title("Hello World"));
     }
 
     @Override
@@ -197,8 +273,16 @@ public class MapsActivity extends FragmentActivity implements GeoQueryEventListe
     @Override
     public void onKeyEntered(String key, GeoLocation location) {
         // Add a new marker to the map
-        Marker marker = this.mMap.addMarker(new MarkerOptions().position(new LatLng(location.latitude, location.longitude)));
-        this.markers.put(key, marker);
+        if (myInfo.getIsDriver()) {
+            Marker marker = this.mMap.addMarker(new MarkerOptions()
+                    .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE))
+                    .position(new LatLng(location.latitude, location.longitude)));
+            this.markers.put(key, marker);
+        }else{
+            Marker marker = this.mMap.addMarker(new MarkerOptions()
+                    .position(new LatLng(location.latitude, location.longitude)));
+            this.markers.put(key, marker);
+        }
     }
 
     @Override
@@ -291,13 +375,43 @@ public class MapsActivity extends FragmentActivity implements GeoQueryEventListe
         }
         */
 
-        ToggleButton toggle = (ToggleButton) findViewById(R.id.togglebutton);
+        final ToggleButton toggle = (ToggleButton) findViewById(R.id.togglebutton);
         toggle.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (isChecked) {
                     // The toggle is enabled
-                } else {
+                    // The toggle is enabled
+                /* get car info from firebase
+                * if info is null then SettingsActivity is opened. */
+                    String info = myInfo.getCarInfo();
+                    //Firebase car info is assigned to 'info'
+                    if (info == ""){
+                        android.support.v7.app.AlertDialog.Builder builder1 = new android.support.v7.app.AlertDialog.Builder(MapsActivity.this);
+                        builder1.setMessage("Please fill the car information to switch on driver mode.");
+                        builder1.setCancelable(true);
+                        builder1.setPositiveButton("CONTINUE",
+                                new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int id) {
+
+                                        Intent intentForCarInfo = new Intent(MapsActivity.this, SettingsActivity.class);
+                                        MapsActivity.this.startActivity(intentForCarInfo);
+                                        Log.i("Content ", " App layout ");
+                                        dialog.cancel();
+                                    }
+                                });
+                        builder1.setNegativeButton("CLOSE",
+                                new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int id) {
+                                        toggle.setChecked(false);
+                                        dialog.cancel();
+                                    }
+                                });
+
+                        android.support.v7.app.AlertDialog alert11 = builder1.create();
+                        alert11.show();
+                    } else {
                     // The toggle is disabled
+                    }
                 }
             }
         });
@@ -312,6 +426,33 @@ public class MapsActivity extends FragmentActivity implements GeoQueryEventListe
                 Log.i("Content ", " App layout ");
             }
         });
+    }
+
+    private void makeToDriverRequestAlert(){
+        android.support.v7.app.AlertDialog.Builder builder1 = new android.support.v7.app.AlertDialog.Builder(MapsActivity.this);
+        String driverName = "Driver Name"; //should be obtained from firebase.
+        String driverSurname = "Driver Surname"; //should be obtained from firebase.
+        String driverBirthday = "Driver Birthday"; //should be obtained from firebase.
+        String driverRating = "Driver Rating"; //should be obtained from firebase.
+        String message = driverName+" "+driverSurname+", "+driverBirthday+", "+driverRating;
+        builder1.setMessage(message);
+        builder1.setCancelable(true);
+        builder1.setPositiveButton("SEND",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                    /* otostop request method should be here. */
+                        dialog.cancel();
+                    }
+                });
+        builder1.setNegativeButton("CLOSE",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        dialog.cancel();
+                    }
+                });
+
+        android.support.v7.app.AlertDialog alert11 = builder1.create();
+        alert11.show();
     }
 
     private void setupDrawerLayout() {
@@ -391,6 +532,7 @@ public class MapsActivity extends FragmentActivity implements GeoQueryEventListe
             String userEmail = extras.getString("user_email");
             String userID = extras.getString("user_id");
             fillUserPage(userName,userEmail,userID);
+            myInfo = new User(1993, userName, 0, true, userEmail, userID,"");
         }else{
             Toast.makeText(this,"[-]Extras are gotten NULL!", Toast.LENGTH_SHORT).show();
         }

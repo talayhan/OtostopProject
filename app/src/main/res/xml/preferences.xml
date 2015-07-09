@@ -1,35 +1,35 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
     <PreferenceCategory android:title="@string/personal_info" >
-        <EditTextPreference android:title="AD"
-            android:key="username"
+        <EditTextPreference android:title="NAME"
+            android:key="userName"
             android:summary="Ozan"></EditTextPreference>
-        <EditTextPreference android:title="SOYAD"
+        <EditTextPreference android:title="SURNAME"
             android:key="userSurname"
             android:summary="Ay"></EditTextPreference>
-        <EditTextPreference android:title="E-POSTA ADRESİ"
+        <EditTextPreference android:title="E_MAIL"
             android:key="userEmail"
             android:summary="ozannay@gmail.com"></EditTextPreference>
-        <EditTextPreference android:title="DOĞUM GÜNÜ"
+        <EditTextPreference android:title="BIRTHDAY"
             android:key="userBirthday"
             android:summary="21/01/1993"></EditTextPreference>
-        <EditTextPreference android:title="TELEFON NUMARASI"
+        <EditTextPreference android:title="PHONE NUMBER"
             android:key="userPhone"
             android:summary="5535090975"></EditTextPreference>
-        <EditTextPreference android:title="ARABA BİLGİSİ"
+        <EditTextPreference android:title="CAR INFO"
             android:key="userCar"
-            android:summary=""
-            android:enabled="false"></EditTextPreference>
-        <EditTextPreference android:title="PUAN"
+            android:summary=""></EditTextPreference>
+        <EditTextPreference android:title="RATING"
             android:summary="0.0"
             android:enabled="false"></EditTextPreference>
     </PreferenceCategory>
     <PreferenceCategory android:title="@string/password_processes">
-        <EditTextPreference android:title="Şifrenizi değiştirmek için tıklayınız."
+        <CheckBoxPreference android:title="PASSWORD"
+            android:key="pass"
+            android:summary=""
+            android:checked="false"></CheckBoxPreference>
+        <EditTextPreference android:title="Change your password"
             android:key="userNewPass"
-            android:summary="********"></EditTextPreference>
-        <EditTextPreference android:title="Şifrenizi tekrar giriniz."
-            android:key="userNewPassAgain"
-            android:summary="********"></EditTextPreference>
+            android:summary=""></EditTextPreference>
     </PreferenceCategory>
 </PreferenceScreen>
