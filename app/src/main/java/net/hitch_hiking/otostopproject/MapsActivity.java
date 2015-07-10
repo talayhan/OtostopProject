@@ -129,7 +129,8 @@ public class MapsActivity extends FragmentActivity implements GeoQueryEventListe
         this.mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
             @Override
             public boolean onMarkerClick(Marker marker) {
-                Toast.makeText(getApplicationContext(), "Clicked a window with title..." + marker.getTitle(), Toast.LENGTH_SHORT).show();
+                String info = marker.getTitle();
+                Toast.makeText(getApplicationContext(), "Clicked a window with title.: " + info, Toast.LENGTH_SHORT).show();
                 return true;
             }
         });
@@ -275,11 +276,13 @@ public class MapsActivity extends FragmentActivity implements GeoQueryEventListe
         // Add a new marker to the map
         if (myInfo.getIsDriver()) {
             Marker marker = this.mMap.addMarker(new MarkerOptions()
+                    .title(myInfo.getUserId())
                     .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE))
                     .position(new LatLng(location.latitude, location.longitude)));
             this.markers.put(key, marker);
         }else{
             Marker marker = this.mMap.addMarker(new MarkerOptions()
+                    .title(myInfo.getUserId())
                     .position(new LatLng(location.latitude, location.longitude)));
             this.markers.put(key, marker);
         }
@@ -532,7 +535,7 @@ public class MapsActivity extends FragmentActivity implements GeoQueryEventListe
             String userEmail = extras.getString("user_email");
             String userID = extras.getString("user_id");
             fillUserPage(userName,userEmail,userID);
-            myInfo = new User(1993, userName, 0, true, userEmail, userID,"");
+            myInfo = new User(1993, userName, 0, true, userEmail, userID+"_"+ i++,"");
         }else{
             Toast.makeText(this,"[-]Extras are gotten NULL!", Toast.LENGTH_SHORT).show();
         }
