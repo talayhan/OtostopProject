@@ -7,12 +7,16 @@
 * [ButterKnife](https://github.com/JakeWharton/butterknife)
 * [Firebase](https://www.firebase.com/)
 
-###Change Log
+###Screenshots
+![Screenshots](Screenshots/screens.jpg)
 
 ###Thanks
 
 ###Team
+* Ozan Ay
+* Kaan Üstündağ
+* Samet Talayhan
 
 ###License
 
-MIT © [Talayhan Samet](http://www.talayhan.me)
+CC © [Talayhan Samet](http://www.talayhan.me)
