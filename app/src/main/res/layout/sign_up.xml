@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#212121">
+
+    <TextView
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/login_text"
+        android:layout_marginTop="15dp"
+        android:gravity="center"
+        android:textColor="#B6B6B6"
+        android:text="@string/log_in" />
+
+    <com.facebook.login.widget.LoginButton
+        android:id="@+id/login_with_facebook"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="center_horizontal"
+        android:text="@string/login_with_facebook"
+        android:textSize="@dimen/fb_text_size"
+        android:layout_marginTop="15dp" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:gravity="center"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:textAlignment="center"
+        android:layout_marginTop="15dp"
+        android:textSize="15dp"
+        android:text="or"
+        android:textColor="#B6B6B6" />
+
+    <EditText
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:inputType="textEmailAddress"
+        android:ems="10"
+        android:id="@+id/editText"
+        android:layout_marginTop="15dp"
+        android:textColor="#B6B6B6"
+        android:text="@string/e_mail" />
+
+    <EditText
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:inputType="textPassword"
+        android:ems="10"
+        android:id="@+id/editText2"
+        android:layout_marginTop="15dp"
+        android:textColor="#B6B6B6"
+        android:text="@string/password" />
+
+    <Button
+        android:layout_width="fill_parent"
+        android:id="@+id/login_with_password"
+        android:layout_height="@dimen/fb_button_size"
+        android:text="@string/log_in"
+        android:background="#FFA000" />
+
+    <TextView
+        android:id="@+id/login_status"
+        android:layout_width="match_parent"
+        android:gravity="center"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:textAlignment="center"
+        android:layout_marginTop="15dp"
+        android:text="@string/forgot_password"
+        android:textColor="#B6B6B6" />
+
+</LinearLayout>
